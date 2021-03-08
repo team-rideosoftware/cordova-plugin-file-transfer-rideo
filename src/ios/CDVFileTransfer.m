@@ -20,6 +20,7 @@
 #import <Cordova/CDV.h>
 #import "CDVFileTransfer.h"
 #import "CDVLocalFilesystem.h"
+#import "WebKit/WKWebViewConfiguration.h"
 
 #import <AssetsLibrary/ALAsset.h>
 #import <AssetsLibrary/ALAssetRepresentation.h>
@@ -102,6 +103,14 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
 
 - (void)applyRequestHeaders:(NSDictionary*)headers toRequest:(NSMutableURLRequest*)req
 {
+    [req setValue:@"XMLHttpRequest" forHTTPHeaderField:@"X-Requested-With"];
+
+    WKWebViewConfiguration* configuration = [[WKWebViewConfiguration alloc] init];
+    NSString *userAgent = configuration.applicationNameForUserAgent;
+    if (userAgent) {
+        [req setValue:userAgent forHTTPHeaderField:@"User-Agent"];
+    }
+
     for (NSString* headerName in headers) {
         id value = [headers objectForKey:headerName];
         if (!value || (value == [NSNull null])) {
