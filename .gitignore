@@ -13,3 +13,5 @@ Thumbs.db
 *.user
 
 node_modules
+.idea/
+package-lock.json
